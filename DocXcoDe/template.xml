@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<Document>  
+  <Text value="hello inner 1" />
+  <Text value="hello inner 2" />
+  <!--Pagebreak /-->
+  <Text value="hello inner 3" />
+  <Text value="hello">
+  </Text>
+</Document>
