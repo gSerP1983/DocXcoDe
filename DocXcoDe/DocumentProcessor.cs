@@ -7,6 +7,7 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocXcoDe.Node;
+using DocXcoDe.Util;
 
 namespace DocXcoDe
 {
@@ -90,7 +91,7 @@ namespace DocXcoDe
 
             var queryNode = node as BaseQueryNode;
             if (queryNode != null)
-                Dao.ExecuteQuery(connectionString, queryNode.Query, queryNode.Data);
+                Dao.ExecuteQuery(connectionString, queryNode.GetQuery(), queryNode.Data);
 
             reader.MoveToElement();
             return node;

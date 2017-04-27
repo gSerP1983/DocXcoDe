@@ -6,5 +6,5 @@
   <Text value="hello">
   </Text>
   <Pagebreak />
-  <Table query="select SCHEMA_NAME(o.schema_id) Схема, o.name as Наименование, o.object_id as _object_id, ep.value Описание from sys.objects o INNER JOIN sys.extended_properties ep ON ep.major_id = o.object_id and ep.minor_id = 0 and ep.name = 'MS_Description' WHERE o.type_desc = 'USER_TABLE'"/>
+  <Table queryPath="sql/tables.sql"/>
 </Document>
