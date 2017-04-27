@@ -46,6 +46,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Node\ForeachNode.cs" />
     <Compile Include="Util\Db.cs" />
     <Compile Include="Node\PageBreakNode.cs" />
     <Compile Include="Node\TableNode.cs" />

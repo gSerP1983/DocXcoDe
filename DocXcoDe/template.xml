@@ -5,6 +5,9 @@
   <Text value="hello inner 3" />
   <Text value="hello">
   </Text>
+  <foreach queryPath="sql\tables.sql">
+    <Text value="foreach" />
+  </foreach>
   <Pagebreak />
   <Table queryPath="sql\tables.sql"/>
 </Document>
