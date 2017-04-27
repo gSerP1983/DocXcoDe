@@ -62,7 +62,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="sql\tables.sql" />
+    <Content Include="sql\tables.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="template.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
