@@ -42,7 +42,7 @@ namespace DocXcoDe
                     {
                         if (reader.NodeType == XmlNodeType.Element)
                         {
-                            var node = CreateNode(nodeTypes, reader, _connectionString);
+                            var node = CreateNode(nodeTypes, reader);
 
                             if (stack.Any())
                             {
@@ -53,6 +53,10 @@ namespace DocXcoDe
                                     parent.Add(node);
                                 }
                             }
+
+                            var queryNode = node as BaseQueryNode;
+                            if (queryNode != null)
+                                queryNode.ConnectionString = _connectionString;
 
                             if (!reader.IsEmptyElement)
                                 stack.Push(node);
@@ -70,7 +74,7 @@ namespace DocXcoDe
             }
         }
 
-        private static BaseNode CreateNode(Type[] nodeTypes, XmlReader reader, string connectionString)
+        private static BaseNode CreateNode(Type[] nodeTypes, XmlReader reader)
         {
             var node = Activator.CreateInstance(GetNodeType(nodeTypes, reader.Name)) as BaseNode;
             if (node == null)
@@ -88,10 +92,6 @@ namespace DocXcoDe
 
                 prop.SetValue(node, reader.Value);
             }
-
-            var queryNode = node as BaseQueryNode;
-            if (queryNode != null)
-                Dao.ExecuteQuery(connectionString, queryNode.GetQuery(), queryNode.Data);
 
             reader.MoveToElement();
             return node;

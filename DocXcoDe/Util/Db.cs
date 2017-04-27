@@ -7,6 +7,7 @@ namespace DocXcoDe.Util
     {
         public static void ExecuteQuery(string connectionString, string query, DataTable dt)
         {
+            dt.Clear();
             using (var da = new SqlDataAdapter(query, connectionString))
                 da.Fill(dt);
         }

@@ -12,7 +12,7 @@ namespace DocXcoDe.Node
         public string Value { get; set; }
         public OpenXmlElement GetElement()
         {
-            return new Paragraph(new Run(new Text(Value)));
+            return new Paragraph(new Run(new Text(AdjustQueryValue(Value))));
         }
     }
 }

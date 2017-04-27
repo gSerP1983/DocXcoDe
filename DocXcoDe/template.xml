@@ -5,8 +5,11 @@
   <Text value="hello inner 3" />
   <Text value="hello">
   </Text>
-  <foreach queryPath="sql\tables.sql">
-    <Text value="foreach" />
+  <foreach name="table" queryPath="sql\tables.sql">
+    <Text value="Таблица {Наименование} ({table.описание})" />
+    <Text value="Триггеры" />
+    <Table query="select name [Наименование], is_disabled from sys.triggers where parent_id = {table._object_id}" />
+    <Text value="" />
   </foreach>
   <Pagebreak />
   <Table queryPath="sql\tables.sql"/>

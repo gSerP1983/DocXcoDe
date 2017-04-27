@@ -2,6 +2,7 @@
 using System.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Wordprocessing;
+using DocXcoDe.Util;
 
 namespace DocXcoDe.Node
 {
@@ -11,6 +12,8 @@ namespace DocXcoDe.Node
 
         public OpenXmlElement GetElement()
         {
+            Dao.ExecuteQuery(ConnectionString, GetQuery(), Data);
+
             var visibleCols = Data.Columns.Cast<DataColumn>()
                 .Where(col => !col.ColumnName.StartsWith("_"))
                 .ToArray();
