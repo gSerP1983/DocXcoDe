@@ -5,10 +5,12 @@ using DocumentFormat.OpenXml.Wordprocessing;
 namespace DocXcoDe.Node
 {
     [DebuggerDisplay("Text='{Value}'")]
-    public class TextNode : BaseNode
+    public class TextNode : BaseNode, IVisualNode
     {
+        public override bool IsLeaf { get { return true; } }
+
         public string Value { get; set; }
-        public override OpenXmlElement GetElement()
+        public OpenXmlElement GetElement()
         {
             return new Paragraph(new Run(new Text(Value)));
         }

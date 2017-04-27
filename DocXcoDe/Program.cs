@@ -31,7 +31,8 @@ namespace DocXcoDe
                 package.MainDocumentPart.Document.Save();
             }*/
 
-            new Report("template.xml", "", "1.docx")
+            const string connectionString = @"Data Source=DEV-DB-V-02\SQL2012;Initial Catalog=MobileService_Dev;Persist Security Info=True;User ID=sa;Password=sa0.123;";
+            new DocumentProcessor("template.xml", connectionString, "1.docx")
                 .Process();
         }
     }

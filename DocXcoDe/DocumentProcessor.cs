@@ -10,13 +10,13 @@ using DocXcoDe.Node;
 
 namespace DocXcoDe
 {
-    public class Report
+    public class DocumentProcessor
     {
         private readonly string _xmlTemplatePath;
         private readonly string _connectionString;
         private readonly string _docXPath;
 
-        public Report(string xmlTemplatePath, string connectionString, string docXPath)
+        public DocumentProcessor(string xmlTemplatePath, string connectionString, string docXPath)
         {
             _xmlTemplatePath = xmlTemplatePath;
             _connectionString = connectionString;
@@ -32,7 +32,7 @@ namespace DocXcoDe
             {
                 package.AddMainDocumentPart();
 
-                BaseNode rootNode = null;
+                var rootNode = (IVisualNode)null;
                 var stack = new Stack<BaseNode>();
 
                 using (var reader = XmlReader.Create(new StreamReader(_xmlTemplatePath)))
@@ -41,13 +41,16 @@ namespace DocXcoDe
                     {
                         if (reader.NodeType == XmlNodeType.Element)
                         {
-                            var node = CreateNode(nodeTypes, reader);
+                            var node = CreateNode(nodeTypes, reader, _connectionString);
 
                             if (stack.Any())
                             {
                                 var parent = stack.Peek();
-                                node.Parent = parent;
-                                parent.Add(node);
+                                if (!parent.IsLeaf)
+                                {
+                                    node.Parent = parent;
+                                    parent.Add(node);
+                                }
                             }
 
                             if (!reader.IsEmptyElement)
@@ -55,7 +58,7 @@ namespace DocXcoDe
                         }
 
                         if (reader.NodeType == XmlNodeType.EndElement)
-                            rootNode = stack.Pop();
+                            rootNode = stack.Pop() as IVisualNode;
                     }
                 }
 
@@ -66,7 +69,7 @@ namespace DocXcoDe
             }
         }
 
-        private static BaseNode CreateNode(Type[] nodeTypes, XmlReader reader)
+        private static BaseNode CreateNode(Type[] nodeTypes, XmlReader reader, string connectionString)
         {
             var node = Activator.CreateInstance(GetNodeType(nodeTypes, reader.Name)) as BaseNode;
             if (node == null)
@@ -84,6 +87,10 @@ namespace DocXcoDe
 
                 prop.SetValue(node, reader.Value);
             }
+
+            var queryNode = node as BaseQueryNode;
+            if (queryNode != null)
+                Dao.ExecuteQuery(connectionString, queryNode.Query, queryNode.Data);
 
             reader.MoveToElement();
             return node;

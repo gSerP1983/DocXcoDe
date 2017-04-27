@@ -46,8 +46,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dao.cs" />
     <Compile Include="Node\PageBreakNode.cs" />
-    <Compile Include="Report.cs" />
+    <Compile Include="Node\TableNode.cs" />
+    <Compile Include="DocumentProcessor.cs" />
     <Compile Include="Node\DocumentNode.cs" />
     <Compile Include="Node\BaseNode.cs" />
     <Compile Include="Node\TextNode.cs" />
