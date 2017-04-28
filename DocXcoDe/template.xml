@@ -1,15 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?> 
 <Document>  
-  <Text value="hello inner 1" />
-  <Text value="hello inner 2" />  
-  <Text value="hello inner 3" />
-  <Text value="hello">
-  </Text>
+  <Text value="hello"/>
     
   <foreach name="table" queryPath="sql\tables.sql">
     <Text value="Таблица {Наименование}. {table.описание}." />
     <Text value="Триггеры" />
     <Table query="select name [Наименование], is_disabled from sys.triggers where parent_id = {table._object_id}" />
+    <Text value="" />
+    <Text value="Колоночки" />
+    <Table queryPath="sql\columns.sql" />
     <Text value="" />
   </foreach>
     
