@@ -12,7 +12,13 @@ namespace DocXcoDe.Node
         public string Value { get; set; }
         public OpenXmlElement GetElement()
         {
-            return new Paragraph(new Run(new Text(AdjustQueryValue(Value))));
+            var prop = new RunProperties();
+            //prop.AppendChild(new RunFonts {Ascii = "Arial"});
+            //prop.AppendChild(new Bold());
+            //prop.AppendChild(new FontSize { Val = new StringValue("24") });
+
+            var run = new Run(new Text(AdjustQueryValue(Value))) {RunProperties = prop};
+            return new Paragraph(run);
         }
     }
 }
