@@ -74,6 +74,25 @@ namespace DocXcoDe.Node
             }
             return value;
         }
+
+        protected StyleNode GetStyle(string name)
+        {
+            var node = this;
+            while (node.Parent != null)
+                node = node.Parent;
+
+            var style = node.Nodes.OfType<StyleNode>()
+                .FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.InvariantCultureIgnoreCase))
+                ;
+
+            if (style == null)
+            {
+                var err = string.Format("Style с name='{0}' не найден.", name);
+                throw new ApplicationException(err);
+            }
+
+            return style;
+        }
     }
 
     public abstract class BaseQueryNode : BaseNode

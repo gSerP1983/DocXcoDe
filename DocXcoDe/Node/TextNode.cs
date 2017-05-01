@@ -15,13 +15,27 @@ namespace DocXcoDe.Node
 
         public override OpenXmlElement GetElement()
         {
-            var prop = new RunProperties();
-            //prop.AppendChild(new RunFonts {Ascii = "Arial"});
-            //prop.AppendChild(new Bold());
-            //prop.AppendChild(new FontSize { Val = new StringValue("24") });
+            var runProp = new RunProperties();
+            var patagraphProp = new ParagraphProperties();
+            if (!string.IsNullOrEmpty(Style))
+            {
+                var style = GetStyle(Style);
 
-            var run = new Run(new Text(AdjustQueryValue(Value))) {RunProperties = prop};
-            return new Paragraph(run);
+                if (!string.IsNullOrWhiteSpace(style.Font))
+                    runProp.AppendChild(new RunFonts { Ascii = style.Font });
+
+                if (style.Bold)
+                    runProp.AppendChild(new Bold());
+
+                if (!string.IsNullOrWhiteSpace(style.Size))
+                    runProp.AppendChild(new FontSize { Val = new StringValue(style.Size) });
+
+                if (style.Align != null)
+                    patagraphProp.AppendChild(new Justification { Val = style.Align });
+            }
+            
+            var run = new Run(new Text(AdjustQueryValue(Value))) {RunProperties = runProp};
+            return new Paragraph(run) { ParagraphProperties = patagraphProp };
         }
     }
 }

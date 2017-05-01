@@ -1,16 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?> 
 <Document>
-  <Style name="h1" bold="1" fontSize="36"/>
+  <Style name="h1" bold="1" size="32" align="center"/>
+  <Style name="h2" bold="1" size="28"/>
+  <Style name="h3" bold="0" size="24"/>
   
   <Text value="Таблицы." style="h1"/>
     
   <foreach name="table" queryPath="sql\tables.sql">
-    <Text value="Таблица {Наименование}. {table.описание}." />
-    <Text value="Триггеры" />
-    <Table query="select name [Наименование], is_disabled from sys.triggers where parent_id = {table._object_id}" />
-    <Text value="" />
-    <Text value="Колоночки" />
+    <Text value="Таблица {Наименование}. {table.описание}." style="h2" />
+    
+    <Text value="Триггеры:" style="h3" />
+    <Table query="select name [Наименование] from sys.triggers where parent_id = {table._object_id}" />
+    
+    <Text value="Колонки:" style="h3"/>
     <Table queryPath="sql\columns.sql" />
+    
     <Text value="" />
   </foreach>
     
