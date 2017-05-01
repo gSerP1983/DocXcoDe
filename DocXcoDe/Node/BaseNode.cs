@@ -28,6 +28,8 @@ namespace DocXcoDe.Node
             _nodes.Add(node);
         }
 
+        public abstract OpenXmlElement GetElement();
+
         private BaseQueryNode GetQueryNode(string name = null)
         {
             var parent = Parent;
@@ -102,10 +104,5 @@ namespace DocXcoDe.Node
 
             throw new ApplicationException(string.Format("Для {0} должно быть задано либо Query, либо QueryPath...", GetType().Name));
         }
-    }
-
-    public interface IVisualNode
-    {
-        OpenXmlElement GetElement();
     }
 }

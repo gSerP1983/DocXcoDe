@@ -6,11 +6,11 @@ using DocXcoDe.Util;
 
 namespace DocXcoDe.Node
 {
-    public class TableNode : BaseQueryNode, IVisualNode
+    public class TableNode : BaseQueryNode
     {
         public override bool IsLeaf { get { return true; } }
 
-        public OpenXmlElement GetElement()
+        public override OpenXmlElement GetElement()
         {
             Dao.ExecuteQuery(ConnectionString, GetQuery(), Data);
 

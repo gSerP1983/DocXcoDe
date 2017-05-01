@@ -6,10 +6,10 @@ using DocXcoDe.Util;
 
 namespace DocXcoDe.Node
 {
-    public class ForeachNode : BaseQueryNode, IVisualNode
+    public class ForeachNode : BaseQueryNode
     {
         public override bool IsLeaf { get { return false; } }
-        public OpenXmlElement GetElement()
+        public override OpenXmlElement GetElement()
         {
             Dao.ExecuteQuery(ConnectionString, GetQuery(), Data);
 
@@ -17,8 +17,12 @@ namespace DocXcoDe.Node
             foreach (var dataRow in Data.Rows.Cast<DataRow>())
             {
                 Current = dataRow;
-                foreach (var node in Nodes.OfType<IVisualNode>())
-                    run.AppendChild(node.GetElement());
+                foreach (var node in Nodes)
+                {
+                    var el = node.GetElement();
+                    if (el != null)
+                        run.AppendChild(el);
+                }
             }
             return new Paragraph(run);
         }

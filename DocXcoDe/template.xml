@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?> 
-<Document>  
-  <Text value="hello"/>
+<Document>
+  <Style name="h1" bold="1" fontSize="36"/>
+  
+  <Text value="Таблицы." style="h1"/>
     
   <foreach name="table" queryPath="sql\tables.sql">
     <Text value="Таблица {Наименование}. {table.описание}." />

@@ -5,12 +5,15 @@ using DocumentFormat.OpenXml.Wordprocessing;
 namespace DocXcoDe.Node
 {
     [DebuggerDisplay("Text='{Value}'")]
-    public class TextNode : BaseNode, IVisualNode
+    public class TextNode : BaseNode
     {
         public override bool IsLeaf { get { return true; } }
 
         public string Value { get; set; }
-        public OpenXmlElement GetElement()
+
+        public string Style { get; set; }
+
+        public override OpenXmlElement GetElement()
         {
             var prop = new RunProperties();
             //prop.AppendChild(new RunFonts {Ascii = "Arial"});

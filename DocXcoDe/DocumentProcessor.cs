@@ -33,7 +33,7 @@ namespace DocXcoDe
             {
                 package.AddMainDocumentPart();
 
-                var rootNode = (IVisualNode)null;
+                var rootNode = (BaseNode)null;
                 var stack = new Stack<BaseNode>();
 
                 using (var reader = XmlReader.Create(new StreamReader(_xmlTemplatePath)))
@@ -63,7 +63,7 @@ namespace DocXcoDe
                         }
 
                         if (reader.NodeType == XmlNodeType.EndElement)
-                            rootNode = stack.Pop() as IVisualNode;
+                            rootNode = stack.Pop();
                     }
                 }
 
@@ -90,7 +90,7 @@ namespace DocXcoDe
                 if (prop == null)
                     throw new ApplicationException(string.Format("Для типа '{0}' не найдено св-во '{1}'.", node.GetType().Name, reader.Name));
 
-                prop.SetValue(node, reader.Value);
+                prop.SetValue(node, SafeConverter.Convert(reader.Value, prop.PropertyType));
             }
 
             reader.MoveToElement();

@@ -4,15 +4,19 @@ using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace DocXcoDe.Node
 {
-    public class DocumentNode : BaseNode, IVisualNode
+    public class DocumentNode : BaseNode
     {
         public override bool IsLeaf { get { return false; } }
 
-        public OpenXmlElement GetElement()
+        public override OpenXmlElement GetElement()
         {
             var body = new Body();
-            foreach (var node in Nodes.OfType<IVisualNode>())
-                body.AppendChild(node.GetElement());
+            foreach (var node in Nodes)
+            {
+                var el = node.GetElement();
+                if (el != null)
+                    body.AppendChild(el);
+            }
             return body;
         }
     }
