@@ -75,23 +75,17 @@ namespace DocXcoDe.Node
             return value;
         }
 
-        protected StyleNode GetStyle(string name)
+        protected DocumentNode GetDocumentNode()
         {
             var node = this;
             while (node.Parent != null)
                 node = node.Parent;
 
-            var style = node.Nodes.OfType<StyleNode>()
-                .FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.InvariantCultureIgnoreCase))
-                ;
+            var documentNode = node as DocumentNode;
+            if (documentNode == null)
+                throw new ApplicationException("Не удалось найти DocumentNode для узла " + GetType());
 
-            if (style == null)
-            {
-                var err = string.Format("Style с name='{0}' не найден.", name);
-                throw new ApplicationException(err);
-            }
-
-            return style;
+            return documentNode;
         }
     }
 

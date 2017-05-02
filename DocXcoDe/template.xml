@@ -2,17 +2,17 @@
 <Document>
   <Style name="h1" bold="1" size="32" align="center"/>
   <Style name="h2" bold="1" size="28"/>
-  <Style name="h3" bold="0" size="24"/>
+  <Style name="h3" bold="0" size="24" align="left"/>
   
-  <Text value="Таблицы." style="h1"/>
+  <Text value="Таблицы." template="Header1" style="h1"/>
     
   <foreach name="table" queryPath="sql\tables.sql">
-    <Text value="Таблица {Наименование}. {table.описание}." style="h2" />
+    <Text value="Таблица {Наименование}. {table.описание}." template="Header2" />
     
-    <Text value="Триггеры:" style="h3" />
+    <Text value="Триггеры:" style="H3" />
     <Table query="select name [Наименование] from sys.triggers where parent_id = {table._object_id}" />
     
-    <Text value="Колонки:" style="h3"/>
+    <Text value="Колонки:" style="H3"/>
     <Table queryPath="sql\columns.sql" />
     
     <Text value="" />

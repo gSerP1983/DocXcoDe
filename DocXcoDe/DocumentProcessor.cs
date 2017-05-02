@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocXcoDe.Node;
@@ -15,13 +14,15 @@ namespace DocXcoDe
     {
         private readonly string _xmlTemplatePath;
         private readonly string _connectionString;
-        private readonly string _docXPath;
+        private readonly string _resultPath;
+        private readonly string _docxTemplatePath;
 
-        public DocumentProcessor(string xmlTemplatePath, string connectionString, string docXPath)
+        public DocumentProcessor(string xmlTemplatePath, string docxTemplatePath, string connectionString, string resultPath)
         {
             _xmlTemplatePath = xmlTemplatePath;
             _connectionString = connectionString;
-            _docXPath = docXPath;            
+            _resultPath = resultPath;
+            _docxTemplatePath = docxTemplatePath;
         }
 
 
@@ -29,11 +30,10 @@ namespace DocXcoDe
         {
             var nodeTypes = GetAllNodeTypes();
 
-            using (var package = WordprocessingDocument.Create(_docXPath, WordprocessingDocumentType.Document))
+            File.Copy(_docxTemplatePath, _resultPath, true);
+            using (var doc = WordprocessingDocument.Open(_resultPath, true))
             {
-                package.AddMainDocumentPart();
-
-                var rootNode = (BaseNode)null;
+                var rootNode = (DocumentNode)null;
                 var stack = new Stack<BaseNode>();
 
                 using (var reader = XmlReader.Create(new StreamReader(_xmlTemplatePath)))
@@ -63,14 +63,15 @@ namespace DocXcoDe
                         }
 
                         if (reader.NodeType == XmlNodeType.EndElement)
-                            rootNode = stack.Pop();
+                            rootNode = stack.Pop() as DocumentNode;
                     }
                 }
 
                 if (rootNode == null)
                     throw new ApplicationException("Не удалось правильно распарсить шаблон, проверьте его.");
 
-                package.MainDocumentPart.Document = new Document(rootNode.GetElement());
+                rootNode.AppendTemplates(doc.MainDocumentPart.Document.Body);
+                doc.MainDocumentPart.Document = new Document(rootNode.GetElement());
             }
         }
 
