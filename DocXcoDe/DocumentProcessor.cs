@@ -31,45 +31,45 @@ namespace DocXcoDe
             var nodeTypes = GetAllNodeTypes();
 
             File.Copy(_docxTemplatePath, _resultPath, true);
-            using (var doc = WordprocessingDocument.Open(_resultPath, true))
+            var rootNode = (DocumentNode) null;
+            var stack = new Stack<BaseNode>();
+
+            using (var reader = XmlReader.Create(new StreamReader(_xmlTemplatePath)))
             {
-                var rootNode = (DocumentNode)null;
-                var stack = new Stack<BaseNode>();
-
-                using (var reader = XmlReader.Create(new StreamReader(_xmlTemplatePath)))
-                {                    
-                    while (reader.Read())
+                while (reader.Read())
+                {
+                    if (reader.NodeType == XmlNodeType.Element)
                     {
-                        if (reader.NodeType == XmlNodeType.Element)
+                        var node = CreateNode(nodeTypes, reader);
+
+                        if (stack.Any())
                         {
-                            var node = CreateNode(nodeTypes, reader);
-
-                            if (stack.Any())
+                            var parent = stack.Peek();
+                            if (!parent.IsLeaf)
                             {
-                                var parent = stack.Peek();
-                                if (!parent.IsLeaf)
-                                {
-                                    node.Parent = parent;
-                                    parent.Add(node);
-                                }
+                                node.Parent = parent;
+                                parent.Add(node);
                             }
-
-                            var queryNode = node as BaseQueryNode;
-                            if (queryNode != null)
-                                queryNode.ConnectionString = _connectionString;
-
-                            if (!reader.IsEmptyElement)
-                                stack.Push(node);
                         }
 
-                        if (reader.NodeType == XmlNodeType.EndElement)
-                            rootNode = stack.Pop() as DocumentNode;
+                        var queryNode = node as BaseQueryNode;
+                        if (queryNode != null)
+                            queryNode.ConnectionString = _connectionString;
+
+                        if (!reader.IsEmptyElement)
+                            stack.Push(node);
                     }
+
+                    if (reader.NodeType == XmlNodeType.EndElement)
+                        rootNode = stack.Pop() as DocumentNode;
                 }
+            }
 
-                if (rootNode == null)
-                    throw new ApplicationException("Не удалось правильно распарсить шаблон, проверьте его.");
+            if (rootNode == null)
+                throw new ApplicationException("Не удалось правильно распарсить шаблон, проверьте его.");
 
+            using (var doc = WordprocessingDocument.Open(_resultPath, true))
+            {
                 rootNode.AppendTemplates(doc.MainDocumentPart.Document.Body);
                 doc.MainDocumentPart.Document = new Document(rootNode.GetElement());
             }

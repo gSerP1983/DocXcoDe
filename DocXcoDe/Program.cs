@@ -1,12 +1,32 @@
-﻿namespace DocXcoDe
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace DocXcoDe
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            const string connectionString = @"Data Source=DEV-DB-V-02.compulink.local\SQL2012;Initial Catalog=MobileService_Dev;Persist Security Info=True;User ID=sa;Password=sa0.123;";
-            new DocumentProcessor("template.xml", "template.docx", connectionString, "1.docx")
-                .Process();
+            var dict = ParseArgs(args);
+            try
+            {
+                new DocumentProcessor(dict["XMLTEMPLATE"], dict["DOCXTEMPLATE"], dict["CONNECTIONSTRING"], dict["OUTFILENAME"])
+                    .Process();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        private static Dictionary<string, string> ParseArgs(IEnumerable<string> args)
+        {
+            return args
+                .Distinct()
+                .Select(arg => arg.Split('='))
+                .ToDictionary(pair => pair[0].ToUpperInvariant(),
+                    pair => pair.Length > 1 ? string.Join("=", pair.Skip(1)) : "");
         }
     }
 }
